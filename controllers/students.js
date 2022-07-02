@@ -7,7 +7,7 @@ const {
 } = require("../errors");
 
 const createStudent = async (req, res) => {
-  const registered_by = req.user.name;
+  // const registered_by = req.user.name;
 
   const student = await Student.create({ ...req.body });
   const token = student.createJWT();

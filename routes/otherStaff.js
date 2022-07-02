@@ -1,23 +1,24 @@
 const express = require("express");
-const auth = require("../middleware/authenticate");
-
 const router = express.Router();
-
+const auth = require("../middleware/authenticate");
+const verifyRoles = require("../middleware/verifyRole");
 const {
   createOtherStaff,
+  loginOtherStaff,
   getAllOtherStaff,
   getOtherStaff,
   updateOtherStaff,
   deleteOtherStaff,
 } = require("../controllers/otherStaff");
 
-router.route("/register").post(createOtherStaff);
+router.route("/login").post(loginOtherStaff);
 
-router.route("/").get(auth, getAllOtherStaff);
-router.route("/:id").get(auth, getOtherStaff);
+router.route("/register").post(auth, verifyRoles(["Admin"]), createOtherStaff);
+router.route("/").get(auth, verifyRoles(["Admin"]), getAllOtherStaff);
+router.route("/:id").get(auth, verifyRoles(["Admin", "Staff"]), getOtherStaff);
 router
   .route("/:id")
-  .patch(auth, updateOtherStaff)
-  .delete(auth, deleteOtherStaff);
+  .patch(auth, verifyRoles(["Admin"]), updateOtherStaff)
+  .delete(auth, verifyRoles(["Admin"]), deleteOtherStaff);
 
 module.exports = router;

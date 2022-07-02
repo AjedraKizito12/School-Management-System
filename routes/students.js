@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authenticate");
-// const verifyRoles = require("../middleware/verifyRole");
+const verifyRoles = require("../middleware/verifyRole");
 
 const {
   createStudent,
@@ -14,9 +14,14 @@ const {
 
 router.route("/login").post(loginStudent);
 
-router.route("/").post(auth, createStudent);
-router.route("/").get(auth, getAllStudents);
-router.route("/:id").get(auth, getStudent);
-router.route("/:id").patch(auth, updateStudent).delete(auth, deleteStudent);
+router.route("/").post(auth, verifyRoles(["Admin"]), createStudent);
+router.route("/").get(auth, verifyRoles(["Admin", "Teacher"]), getAllStudents);
+router
+  .route("/:id")
+  .get(auth, verifyRoles(["Admin", "Teacher", "Student"]), getStudent);
+router
+  .route("/:id")
+  .patch(auth, verifyRoles(["Admin"]), updateStudent)
+  .delete(auth, verifyRoles(["Admin"]), deleteStudent);
 
 module.exports = router;

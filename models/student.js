@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 
 const StudentSchema = mongoose.Schema(
   {
-    registered_by: {
-      type: String,
-      required: true,
-      ref: "Admin",
-    },
+    // registered_by: {
+    //   type: String,
+    //   required: true,
+    //   ref: "Admin",
+    // },
     student_name: {
       type: String,
       required: [true, "Please provide  name"],
@@ -57,7 +57,7 @@ StudentSchema.pre("save", async function () {
 // create token
 StudentSchema.methods.createJWT = function () {
   return jwt.sign(
-    { adminId: this._id, name: this.name, role: this.user_role },
+    { studentId: this._id, name: this.name, role: this.user_role },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_LIFETIME }
   );

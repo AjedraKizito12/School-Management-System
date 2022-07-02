@@ -1,6 +1,10 @@
 const Teacher = require("../models/teacher");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequestError, NotFoundError } = require("../errors");
+const {
+  BadRequestError,
+  NotFoundError,
+  UnauthenticatedError,
+} = require("../errors");
 
 const createTeacher = async (req, res) => {
   const registered_by = req.user.name;
@@ -19,7 +23,7 @@ const loginTeacher = async (req, res) => {
   if (!email || !password) {
     throw new BadRequestError("Please provide email and password");
   }
-  //validate if Student exists
+  //validate if Teacher exists
   const teacher = await Teacher.findOne({ email });
   if (!teacher) {
     throw new UnauthenticatedError("Invalid Credentials");
@@ -46,13 +50,11 @@ const getAllTeachers = async (req, res) => {
 
 const getTeacher = async (req, res) => {
   const {
-    // user: { adminId },
     params: { id: teacherId },
   } = req;
 
   const teacher = await Teacher.findOne({
     _id: teacherId,
-    // createdBy: adminId,
   });
   if (!teacher) {
     throw new NotFoundError(`No teacher with id ${teacherId}`);
@@ -63,7 +65,6 @@ const getTeacher = async (req, res) => {
 const updateTeacher = async (req, res) => {
   const {
     body: { teacher_name, subjectToTeach },
-    // user: { adminId },
     params: { id: teacherId },
   } = req;
 
@@ -84,12 +85,10 @@ const updateTeacher = async (req, res) => {
 
 const deleteTeacher = async (req, res) => {
   const {
-    // user: { adminId },
     params: { id: teacherId },
   } = req;
   const teacher = await Teacher.findByIdAndRemove({
     _id: teacherId,
-    // createdBy: adminId,
   });
   if (!teacher) {
     throw new NotFoundError(`No teacher with id ${teacherId}`);

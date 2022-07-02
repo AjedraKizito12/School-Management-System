@@ -37,7 +37,6 @@ app.use(cors());
 app.use(xss());
 
 app.use("/api/admin", adminRouter);
-
 app.use("/api/students", studentsRouter);
 app.use("/api/teachers", teachersRouter);
 app.use("/api/staff", otherStaffRouter);
@@ -45,7 +44,7 @@ app.use("/api/staff", otherStaffRouter);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3500;
 
 const start = async () => {
   try {

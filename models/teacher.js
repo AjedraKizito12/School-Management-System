@@ -4,24 +4,24 @@ const jwt = require("jsonwebtoken");
 
 const teacherSchema = mongoose.Schema(
   {
-    registered_by: {
-      type: String,
-      required: true,
-      ref: "Admin",
-    },
+    // registered_by: {
+    //   type: String,
+    //   required: true,
+    //   ref: "Admin",
+    // },
     teacher_name: {
       type: String,
       required: true,
-    },
-    teacherId: {
-      type: Number,
     },
 
     address: {
       type: String,
       required: true,
     },
-
+    contact_no: {
+      type: String,
+      required: true,
+    },
     gender: {
       type: String,
       required: true,
@@ -30,11 +30,6 @@ const teacherSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    contact_no: {
-      type: String,
-      required: true,
-    },
-
     email: {
       type: String,
       required: true,
@@ -51,7 +46,7 @@ const teacherSchema = mongoose.Schema(
     user_role: {
       type: String,
       required: [true, "Please provide user_type_id"],
-      default: "teacher",
+      default: "Teacher",
     },
   },
   {
@@ -67,7 +62,7 @@ teacherSchema.pre("save", async function () {
 // create token
 teacherSchema.methods.createJWT = function () {
   return jwt.sign(
-    { adminId: this._id, name: this.name, role: this.user_role },
+    { teacherId: this._id, name: this.name, role: this.user_role },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_LIFETIME }
   );
